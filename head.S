@@ -30,6 +30,7 @@
 #include <asm/asm-offsets.h>
 #include <asm/cache.h>
 #include <asm/cputype.h>
+#include <asm/kvm_mmu.h>
 #include <asm/elf.h>
 #include <asm/kernel-pgtable.h>
 #include <asm/kvm_arm.h>
@@ -503,8 +504,16 @@ CPU_LE(	bic	x0, x0, #(3 << 24)	)	// Clear the EE and E0E bits for EL1
 	isb
 	ret
 
+	/* Check for VHE being present */
+2:	mrs	x2, id_aa64mmfr1_el1
+	ubfx	x2, x2, #8, #4
+	
 	/* Hyp configuration. */
-2:	mov_q	x0, HCR_HOST_NVHE_FLAGS
+	mov	x0, #HCR_RW			// 64-bit EL1
+	cbz	x2, set_hcr
+	orr	x0, x0, #HCR_TGE		// Enable Host Extensions
+	orr	x0, x0, #HCR_E2H
+set_hcr:
 	msr	hcr_el2, x0
 
 	/* Generic timers. */
@@ -545,6 +554,9 @@ CPU_LE(	movk	x0, #0x30d0, lsl #16	)	// Clear EE and E0E on LE systems
 
 	/* Coprocessor traps. */
 	mov	x0, #0x33ff
+	cbz	x2, set_cptr
+	orr	x0, x0, #(3 << 20)		// Don't trap FP
+set_cptr:
 	msr	cptr_el2, x0			// Disable copro. traps to EL2
 
 #ifdef CONFIG_COMPAT
@@ -564,7 +576,16 @@ CPU_LE(	movk	x0, #0x30d0, lsl #16	)	// Clear EE and E0E on LE systems
 
 	/* Stage-2 translation */
 	msr	vttbr_el2, xzr
+ 
+	cbz	x2, install_el2_stub
 
+	setup_vtcr x4, x5
+
+	mov	w20, #BOOT_CPU_MODE_EL2		// This CPU booted in EL2
+	isb
+	ret
+
+install_el2_stub:
 	/* Hypervisor stub */
 	adrp	x0, __hyp_stub_vectors
 	add	x0, x0, #:lo12:__hyp_stub_vectors
