@@ -1,0 +1,6 @@
+Description: Pattern with packages for x00td configurations
+Name: jolla-configuration-x00td
+Requires:
+- patterns-sailfish-device-configuration-x00td
+
+Summary: Jolla Configuration x00td
