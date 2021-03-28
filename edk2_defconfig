@@ -35,7 +35,7 @@ CONFIG_KEXEC=y
 CONFIG_CRASH_DUMP=y
 CONFIG_COMPAT=y
 CONFIG_RANDOMIZE_BASE=y
-CONFIG_CMDLINE="ramoops.mem_address=0xa0000000 ramoops.mem_size=0x400000 ramoops.dump_oops=1 ramoops.record_size=0x10000 debug clk_ignore_unused ignore_loglevel PMOS_MO_OUTPUT_REDIRECT"
+CONFIG_CMDLINE="ramoops.mem_address=0xa0000000 ramoops.mem_size=0x400000 ramoops.dump_oops=1 ramoops.record_size=0x10000 debug clk_ignore_unused ignore_loglevel earlycon=efifb,mem PMOS_MO_OUTPUT_REDIRECT"
 CONFIG_CMDLINE_FORCE=y
 CONFIG_HIBERNATION=y
 CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
