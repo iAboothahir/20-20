@@ -8,6 +8,7 @@
 dir.system = /system/bin/
 dir.system = /system/xbin/
 dir.system = /system/product/bin/
+dir.system = /usr/libexec/droid-hybris/system/bin/
 
 dir.vendor = /odm/bin/
 dir.vendor = /vendor/bin/
