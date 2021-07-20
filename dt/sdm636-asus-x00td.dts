@@ -7,7 +7,6 @@
 
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/linux-event-codes.h>
-#include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
 #include "sdm636.dtsi"
 #include "pm660.dtsi"
@@ -410,20 +409,6 @@
 
 &blsp_i2c4 {
 	status = "ok";
-	
-	touchscreen@62 {
-        compatible = "novatek,nt36525";
-        reg = <0x62>;
-        interrupt-parent = <&tlmm>;
-        interrupts = <67 IRQ_TYPE_EDGE_RISING>;
-        #address-cells = <1>;
-		#size-cells = <0>;
-		
-        reset-gpios = <&tlmm 66 GPIO_ACTIVE_HIGH>;
-        
-        vdd-supply = <&pm660l_l3>;
-        vio-supply = <&pm660_l11>;
-      };
 
 	rmi4-i2c-dev@70 {
 		reg = <0x70>;
