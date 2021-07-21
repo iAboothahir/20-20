@@ -409,23 +409,14 @@
 };
 
 &blsp_i2c4 {
-	status = "ok";
-	
-        touchscreen@62 {
+status = "okay";
+   touchscreen: novatek@62 {
+	compatible = "novatek,nt36xxx";
         reg = <0x62>;
-        compatible = "novatek,NVT-ts";
         interrupt-parent = <&tlmm>;
-        interrupts = <67 IRQ_TYPE_EDGE_RISING>;
-        
-        #address-cells = <1>;
-        #size-cells = <0>;
-        
-        reset-gpios = <&tlmm 66 GPIO_ACTIVE_HIGH>;
-
-        vdd-supply = <&pm660l_l3>;
-        vio-supply = <&pm660_l11>;
-      };
-
+        interrupts = <45 IRQ_TYPE_EDGE_RISING>;
+        reset-gpio = <&tlmm 102 GPIO_ACTIVE_HIGH>;
+};
 	rmi4-i2c-dev@70 {
 		reg = <0x70>;
 		compatible = "syna,rmi4-i2c";
