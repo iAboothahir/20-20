@@ -62,6 +62,17 @@
 		#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;
+
+		ramoops@9ff00000 {
+    		  compatible = "ramoops";
+		  reg = <0x00 0x9ff00000 0x00 0x100000>;
+		  console-size = <0x40000>;
+		  record-size = <0x40000>;
+		  ftrace-size = <0x40000>;
+		  pmsg-size = <0x40000>;
+		  ecc-size = <16>;
+		  status = "okay";
+    };
 		memory@85600000 {
 			reg = <0x0 0x85600000 0x0 0x100000>;
 			no-map;
@@ -125,14 +136,6 @@
 		memory@9d400000 {
 			reg = <0x0 0x9d400000 0x0 0x2400000>;
 			no-map;
-		};
-		ramoops@a0000000 {
-			compatible = "ramoops";
-			reg = <0x0 0xa0000000 0x0 0x400000>;
-			console-size = <0x20000>;
-			record-size = <0x20000>;
-			ftrace-size = <0x0>;
-			pmsg-size = <0x20000>;
 		};
 	};
 	
@@ -506,4 +509,32 @@
 };
 &dsi0_phy {
 	vcca-supply = <&vreg_l1b_0p925>;
+};
+&spmi_bus{
+    pon@800 {
+			  compatible = "qcom,qpnp-power-on";
+			  reg = <0x800 0x100>;
+			  interrupts = <0x0 0x8 0x0 IRQ_TYPE_NONE>,
+				      <0x0 0x8 0x1 IRQ_TYPE_NONE>,
+				      <0x0 0x8 0x4 IRQ_TYPE_NONE>,
+				      <0x0 0x8 0x5 IRQ_TYPE_NONE>;
+			  interrupt-names = "kpdpwr", "resin",
+					  "resin-bark", "kpdpwr-resin-bark";
+			  qcom,pon-dbc-delay = <15625>;
+			  qcom,kpdpwr-sw-debounce;
+			  qcom,system-reset;
+			  qcom,store-hard-reset-reason;
+
+			  qcom,pon_1 {
+			  	qcom,pon-type = <0>;
+			  	qcom,pull-up = <1>;
+				  linux,code = <116>;
+			  };
+
+			  qcom,pon_2 {
+				  qcom,pon-type = <1>;
+				  qcom,pull-up = <1>;
+				  linux,code = <114>;
+			  };
+		};
 };
