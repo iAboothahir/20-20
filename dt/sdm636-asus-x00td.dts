@@ -477,7 +477,7 @@
 	#size-cells = <0>;
 	vdda-supply = <&vreg_l1a_1p225>;
 	panel@0 {
-		compatible = "mdss,td4310-txd";
+		compatible = "mdss,nt36672-txd";
 		reg = <0>;
 
 		backlight = <&pm660l_wled>;
