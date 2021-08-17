@@ -30,13 +30,13 @@
 		stdout-path = "framebuffer0";
 
 		framebuffer0: framebuffer@0x9d400000 {
-      		compatible = "simple-framebuffer";
-      		reg = <0x0 0x9d400000 0x0 (1080 * 2160 * 4)>;
-      		width = <1080>;
-      		height = <2160>;
-      		stride = <(1080 * 4)>;
-      		format = "a8r8g8b8";
-    	};
+		compatible = "simple-framebuffer";
+		reg = <0 0x9d400000 0 (1080 * 2160 * 4)>;
+		width = <1080>;
+		height = <2160>;
+		stride = <(1080 * 4)>;
+		format = "a8r8g8b8";
+	};
 	};
 
 	gpio_keys {
@@ -62,23 +62,28 @@
 		#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;
-		memory@85600000 {
+		/* /delete-node/ wlan-msa-guard@85600000;
+		/delete-node/ wlan-msa-mem@85700000;
+		/delete-node/ qhee-code@85800000;
+		/delete-node/ smem-mem@86000000;
+		/delete-node/ mpss@8ac00000; */
+		wlan-msa-guard@85600000 {
 			reg = <0x0 0x85600000 0x0 0x100000>;
 			no-map;
 		};
 
-		memory@85700000 {
+		wlan-msa-mem@85700000 {
 			reg = <0x0 0x85700000 0x0 0x100000>;
 			no-map;
 		};
 
 		/* removed_regions in downstream / qhee_code */
-		memory@85800000 {
+		qhee-code@85800000 {
 			reg = <0x0 0x85800000 0x0 0x800000>;
 			no-map;
 		};
 
-		smem_mem: memory@86000000 {
+		smem-mem@86000000 {
 			reg = <0x0 0x86000000 0x0 0x200000>;
 			no-map;
 		};
@@ -98,24 +103,25 @@
 		/* which covers region starting from removed_regions to 0x88F00000 (end of our tz_mem) */
 
 		/* modem_fw_region */
-		memory@8ac00000 {
+		mpss@8ac00000 {
 			reg = <0x0 0x8ac00000 0x0 0x7e00000>;
 			no-map;
 		};
 
 		/* adsp_fw_region */
-		memory@92a00000 {
+		adsp@92a00000 {
 			reg = <0x0 0x92a00000 0x0 0x1e00000>;
 			no-map;
 		};
 
 		/* pil_mba_mem */
-		memory@94800000 {
+		mba@94800000 {
 			reg = <0x0 0x94800000 0x0 0x200000>;
 			no-map;
 		};
 
 		/* cdsp_fw_region */
+		/delete-node/ tzbuffer@94a00000;
 		memory@94a00000 {
 			reg = <0x0 0x94a00000 0x0 0x600000>;
 			no-map;
@@ -426,7 +432,7 @@
 	};
 };
 
-/*&pmic3 {
+&spmi_bus {
 	labibb {
 			compatible = "qcom,pmi8998-lab-ibb";
 			#address-cells = <1>;
@@ -446,7 +452,7 @@
 				interrupt-names = "sc-err", "ocp";
 			};
 	};
-};*/
+};
 
 &dsi0 {
 	#address-cells = <1>;
