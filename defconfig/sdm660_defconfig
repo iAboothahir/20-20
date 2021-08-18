@@ -125,7 +125,7 @@ CONFIG_NFC_S3FWRN5_I2C=m
 CONFIG_UEVENT_HELPER=y
 CONFIG_DEVTMPFS=y
 CONFIG_DEVTMPFS_MOUNT=y
-CONFIG_EXTRA_FIRMWARE="qcom/a512_zap.b00  qcom/a512_zapqcom/a512_zap.b00 qcom/a512_zap.b01 qcom/a512_zap.b02 qcom/a512_zap.elf qcom/a512_zap.mdt qcom/a530_pfp.fw qcom/a530_pm4.fw"
+CONFIG_EXTRA_FIRMWARE="qcom/a512_zap.b00 qcom/a512_zap.b01 qcom/a512_zap.b02 qcom/a512_zap.elf qcom/a512_zap.mdt qcom/a530_pfp.fw qcom/a530_pm4.fw"
 CONFIG_EXTRA_FIRMWARE_DIR="firmware"
 # CONFIG_QCOM_EBI2 is not set
 CONFIG_OF_OVERLAY=y
