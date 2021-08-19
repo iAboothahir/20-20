@@ -427,8 +427,8 @@
 
         vdd-supply = <&pm660l_l3>;
         vio-supply = <&pm660_l11>;
-	ibb-supply = <&ibb>;
-        lab-supply = <&lab>;
+	//ibb-supply = <&ibb>;
+        //lab-supply = <&lab>;
 	};
 };
 
@@ -438,14 +438,14 @@
 			#address-cells = <1>;
 			#size-cells = <1>;
 			status = "okay";
-			ibb: ibb@dc00 {
+			ibb: ibb {
 				reg = <0xdc00 0x100>;
 				interrupts = <0x3 0xdc 0x2 IRQ_TYPE_EDGE_RISING>,
 					     <0x3 0xdc 0x0 IRQ_TYPE_LEVEL_HIGH>;
 				interrupt-names = "sc-err", "ocp";
 			};
 
-			lab: lab@de00 {
+			lab: lab {
 				reg = <0xde00 0x100>;
 				interrupts = <0x3 0xde 0x1 IRQ_TYPE_EDGE_RISING>,
 					     <0x3 0xde 0x0 IRQ_TYPE_LEVEL_LOW>;
@@ -488,8 +488,14 @@
 &mdss {
 	status = "okay";
 };
+
 &dsi0_phy {
 	vcca-supply = <&vreg_l1b_0p925>;
+};
+
+&pm660l_wled {
+        status = "okay";
+        default-brightness = <512>;
 };
 
 &blsp_i2c4 {
@@ -504,4 +510,8 @@
 &lab {
                 regulator-min-microvolt = <4000000>;
                 regulator-max-microvolt = <6000000>;
+};
+
+&gpucc {
+        status = "okay";
 };
