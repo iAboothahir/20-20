@@ -48,6 +48,7 @@ CONFIG_CP15_BARRIER_EMULATION=y
 CONFIG_SETEND_EMULATION=y
 CONFIG_RANDOMIZE_BASE=y
 CONFIG_CMDLINE="rootfs_part=mmcblk0p66 rootfs_path=.stowaways/postmarketOS.img ramoops.mem_address=0xa0000000 ramoops.mem_size=0x400000 ramoops.dump_oops=1 ramoops.record_size=0x10000 debug clk_ignore_unused ignore_loglevel PMOS_NO_OUTPUT_REDIRECT"
+CONFIG_CMDLINE_FORCE=y
 # CONFIG_EFI is not set
 CONFIG_HIBERNATION=y
 CONFIG_PM_AUTOSLEEP=y
