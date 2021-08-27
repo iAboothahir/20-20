@@ -653,7 +653,6 @@
 
 &mmss_smmu {
 	status = "okay";
-	firmware-name = "mba.mbn","modem.mdt";
 };
 
 &adsp_pil {
@@ -668,6 +667,7 @@
 
 &remoteproc_mss {
 	status = "okay";
+	firmware-name = "mba.mbn","modem.mdt";
 };
 
 &venus {
