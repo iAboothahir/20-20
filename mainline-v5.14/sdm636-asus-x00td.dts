@@ -12,7 +12,6 @@
 #include "sdm636.dtsi"
 #include "pm660.dtsi"
 #include "pm660l.dtsi"
-#include "pmi8998.dtsi"
 
 / {
 	model = "Asus Zenfone Max Pro M1";
@@ -24,6 +23,8 @@
 	};
 
 	chosen {
+		bootargs = "earlycon=tty0 console=tty0";
+
 		#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;
@@ -63,11 +64,7 @@
 		#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;
-		/* /delete-node/ wlan-msa-guard@85600000;
-		/delete-node/ wlan-msa-mem@85700000;
-		/delete-node/ qhee-code@85800000;
-		/delete-node/ smem-mem@86000000;
-		/delete-node/ mpss@8ac00000; */
+		
 		wlan-msa-guard@85600000 {
 			reg = <0x0 0x85600000 0x0 0x100000>;
 			no-map;
@@ -79,8 +76,9 @@
 		};
 
 		/* removed_regions in downstream / qhee_code */
-		qhee-code@85800000 {
-			reg = <0x0 0x85800000 0x0 0x800000>;
+		/delete-node/ qhee-code@85800000;
+		removed_region: removed_region0@85800000 {
+			reg = <0x0 0x85800000 0x0 0x600000>;
 			no-map;
 		};
 
@@ -104,35 +102,86 @@
 		/* which covers region starting from removed_regions to 0x88F00000 (end of our tz_mem) */
 
 		/* modem_fw_region */
-		mpss@8ac00000 {
+		/delete-node/ mpss@8ac00000;
+		mpss_region: modem_fw_region@8ac00000 {
 			reg = <0x0 0x8ac00000 0x0 0x7e00000>;
 			no-map;
 		};
 
 		/* adsp_fw_region */
-		adsp@92a00000 {
+		/delete-node/ adsp@92a00000;
+		adsp_region: adsp_fw_region@92a00000 {
 			reg = <0x0 0x92a00000 0x0 0x1e00000>;
 			no-map;
 		};
 
+		/* adsp_region */
+		/delete-node/ adsp-region@f6000000;
+		adsp_mem: adsp_mem@fe000000 {
+			reg = <0x0 0xfe000000 0x0 0x800000>;
+			no-map;
+		};
+
 		/* pil_mba_mem */
-		mba@94800000 {
+		/delete-node/ mba@94800000;
+		mba_region: pil_mba_region@94800000 {
 			reg = <0x0 0x94800000 0x0 0x200000>;
 			no-map;
 		};
 
 		/* cdsp_fw_region */
 		/delete-node/ tzbuffer@94a00000;
-		memory@94a00000 {
+		buffer_mem: buffer_region@94a00000 {
 			reg = <0x0 0x94a00000 0x0 0x600000>;
 			no-map;
 		};
 
+		/* linux,cma */
+                linux_cma: linux_cma@fb400000 {
+                        reg = <0x0 0xfb400000 0x0 0x2C00000>;
+			no-map;
+		};
+
+
 		/* cont_splash_region / framebuffer */
-		memory@9d400000 {
+		cont_splash_mem: splash_region@9d400000 {
 			reg = <0x0 0x9d400000 0x0 0x2400000>;
 			no-map;
 		};
+
+		/* venus region */
+		/delete-node/ venus@9f800000;
+		venus_region: venus_fw_region@9cc00000 {
+			reg = <0x0 0x9cc00000 0x0 0x800000>;
+			no-map;
+		};
+
+		/* qseecom_region */
+		/delete-node/ qseecom-region@f6800000;
+		qseecom_mem: qseecom_region@f4400000 {
+			reg = < 0x0 0xf4400000 0x0 0x1400000>;
+			no-map;
+		};
+
+		/* display - secure_region */
+		display_secure_region: secure_region@f4400000 {
+			reg = < 0x0 0xf4400000 0x0 0x5c00000>;
+			no-map;
+		};
+
+		/delete-node/ gpu@fed00000;
+		zap_shader_region: gpu@fa800000 {
+			compatible = "shared-dma-pool";
+			reg = < 0x0 0xfa800000 0x0 0x2000>;
+			no-map;
+		};
+
+		/* linux,cma */
+                linux_cma: linux_cma@fb400000 {
+                        reg = <0x0 0xfb400000 0x0 0x2C00000>;
+                        no-map;
+                };
+
 		ramoops@a0000000 {
 			compatible = "ramoops";
 			reg = <0x0 0xa0000000 0x0 0x400000>;
@@ -375,9 +424,9 @@
 &tlmm {
 	gpio-reserved-ranges = <8 4>;
 	ts_reset_gpio: touch_gpio {
-	gpio-hog;
-	gpios = <66 GPIO_ACTIVE_HIGH>;
-	output-high;
+    	gpio-hog;
+    	gpios = <66 GPIO_ACTIVE_HIGH>;
+    	output-high;
 	};
 	panel_reset_gpio: panel-reset-gpio {
 		pins = "gpio53";
@@ -433,39 +482,122 @@
 	};
 };
 
-/*&spmi_bus {
-	pmic@3 {
-		labibb: qcom-lab-ibb-regulator {
-			compatible = "qcom,pmi8998-lab-ibb";
-			#address-cells = <1>;
-			#size-cells = <1>;
-			status = "okay";
-			ibb: ibb {
-				reg = <0xdc00 0x100>;
-				interrupts = <0x3 0xdc 0x2 IRQ_TYPE_EDGE_RISING>,
-					     <0x3 0xdc 0x0 IRQ_TYPE_LEVEL_HIGH>;
-				interrupt-names = "sc-err", "ocp";
-			};
 
-			lab: lab {
-				reg = <0xde00 0x100>;
-				interrupts = <0x3 0xde 0x1 IRQ_TYPE_EDGE_RISING>,
-					     <0x3 0xde 0x0 IRQ_TYPE_LEVEL_LOW>;
-				interrupt-names = "sc-err", "ocp";
+&spmi_bus {
+	pmic@3 {
+		compatible = "qcom,pmi8998", "qcom,spmi-pmic";
+		reg = <0x3 SPMI_USID>;
+                #address-cells = <1>;
+                #size-cells = <1>;
+                status = "okay";
+	labibb {
+                        compatible = "qcom,pmi8998-lab-ibb";
+
+                ibb: ibb {
+                                interrupts = <0x3 0xdc 0x2 IRQ_TYPE_EDGE_RISING>,
+                                             <0x3 0xdc 0x0 IRQ_TYPE_LEVEL_HIGH>;
+                                interrupt-names = "sc-err", "ocp";
+                                // copypaste from downstream device tree
+                                reg-names = "ibb";
+                                regulator-name = "ibb_reg";
+
+                                regulator-min-microvolt = <4000000>;
+                                regulator-max-microvolt = <6300000>;
+
+                                qcom,qpnp-ibb-min-voltage = <1400000>;
+                                qcom,qpnp-ibb-step-size = <100000>;
+                                qcom,qpnp-ibb-slew-rate = <2000000>;
+                                qcom,qpnp-ibb-init-voltage = <4000000>;
+                                qcom,qpnp-ibb-init-amoled-voltage = <4000000>;
+                        };
+
+                lab: lab {
+                                reg-names = "lab";
+                                regulator-name = "lab_reg";
+
+                                regulator-min-microvolt = <4600000>;
+                                regulator-max-microvolt = <6100000>;
+
+                                qcom,qpnp-lab-min-voltage = <4600000>;
+                                qcom,qpnp-lab-step-size = <100000>;
+                                qcom,qpnp-lab-slew-rate = <5000>;
+                                qcom,qpnp-lab-init-voltage = <4600000>;
+                                qcom,qpnp-lab-init-amoled-voltage = <4600000>;
+
+                                qcom,notify-lab-vreg-ok-sts;
+                                interrupts = <0x3 0xde 0x1 IRQ_TYPE_EDGE_RISING>,
+                                             <0x3 0xde 0x0 IRQ_TYPE_LEVEL_LOW>;
+                                interrupt-names = "sc-err", "ocp";
 			};
 		};
-	};
-};*/
+        };
+};
 
-/*&dsi0 {
+
+/*labibb: qcom-lab-ibb-regulator {
+                        compatible = "qcom,pmi8998", "qcom,spmi-pmic";
+                        //compatible = "qcom,pmi8998-lab-ibb";
+                        #address-cells = <1>;
+                        #size-cells = <1>;
+                        status = "okay";
+                labibb {
+                        compatible = "qcom,pmi8998-lab-ibb";
+
+                ibb: ibb {
+                                reg = <0xdc00 0x100>;
+                                interrupts = <0x3 0xdc 0x2 IRQ_TYPE_EDGE_RISING>,
+                                             <0x3 0xdc 0x0 IRQ_TYPE_LEVEL_HIGH>;
+                                interrupt-names = "sc-err", "ocp";
+                                // copypaste from downstream device tree
+                                reg-names = "ibb";
+                                regulator-name = "ibb_reg";
+
+                                regulator-min-microvolt = <4000000>;
+                                regulator-max-microvolt = <6300000>;
+
+                                qcom,qpnp-ibb-min-voltage = <1400000>;
+                                qcom,qpnp-ibb-step-size = <100000>;
+                                qcom,qpnp-ibb-slew-rate = <2000000>;
+                                qcom,qpnp-ibb-init-voltage = <4000000>;
+                                qcom,qpnp-ibb-init-amoled-voltage = <4000000>;
+                        };
+
+                lab: lab {
+                                reg = <0xde00 0x100>;
+                                reg-names = "lab";
+                                regulator-name = "lab_reg";
+
+                                regulator-min-microvolt = <4600000>;
+                                regulator-max-microvolt = <6100000>;
+
+                                qcom,qpnp-lab-min-voltage = <4600000>;
+                                qcom,qpnp-lab-step-size = <100000>;
+                                qcom,qpnp-lab-slew-rate = <5000>;
+                                qcom,qpnp-lab-init-voltage = <4600000>;
+                                qcom,qpnp-lab-init-amoled-voltage = <4600000>;
+
+                                qcom,notify-lab-vreg-ok-sts;
+                                interrupts = <0x3 0xde 0x1 IRQ_TYPE_EDGE_RISING>,
+                                             <0x3 0xde 0x0 IRQ_TYPE_LEVEL_LOW>;
+                                interrupt-names = "sc-err", "ocp";
+                        };
+                };
+        };*/
+
+&dsi0 {
 	#address-cells = <1>;
 	#size-cells = <0>;
+	status = "okay";
 	vdda-supply = <&vreg_l1a_1p225>;
 	panel: panel@0 {
+		compatible = "mdss,nt36672-txd";
 		reg = <0>;
 
 		backlight = <&pm660l_wled>;
 
+		ibb-supply = <&ibb>;
+                lab-supply = <&lab>;
+                vddio-supply = <&pm660_l11>;
 		//reset-gpios = <&tlmm XY GPIO_ACTIVE_LOW>;
 		reset-gpios = <&tlmm 53 GPIO_ACTIVE_HIGH>;
 		disp-te-gpios = <&tlmm 59 GPIO_ACTIVE_HIGH>;
@@ -478,33 +610,6 @@
 			};
 		};
 	};
-};*/
-
-&dsi0 {
-        #address-cells = <1>;
-        #size-cells = <0>;
-        vdda-supply = <&vreg_l1a_1p225>;
-        panel: panel@0 {
-                compatible = "mdss,nt36672-txd";
-                reg = <0>;
-
-                backlight = <&pm660l_wled>;
-
-                ibb-supply = <&ibb>;
-                lab-supply = <&lab>;
-                vddio-supply = <&pm660_l11>;
-                //reset-gpios = <&tlmm XY GPIO_ACTIVE_LOW>;
-                reset-gpios = <&tlmm 53 GPIO_ACTIVE_HIGH>;
-                disp-te-gpios = <&tlmm 59 GPIO_ACTIVE_HIGH>;
-
-                pinctrl-names = "default";
-                pinctrl-0 = <&panel_reset_gpio &panel_te_gpio>;
-                port {
-                        panel_in: endpoint {
-                                remote-endpoint = <&dsi0_out>;
-                        };
-                };
-        };
 };
 
 &dsi0_out {
@@ -516,17 +621,13 @@
 };
 
 &dsi0_phy {
+	status = "okay";
 	vcca-supply = <&vreg_l1b_0p925>;
 };
 
 &pm660l_wled {
         status = "okay";
         default-brightness = <512>;
-};
-
-&adreno_gpu {
-	status = "okay";
-
 };
 
 &blsp_i2c4 {
@@ -543,14 +644,39 @@
                 regulator-max-microvolt = <6000000>;
 };
 
-/*&panel {
-	compatible = "asus,nt36672-txd";
-};*/
+&gcc {
+	status = "okay";
+};
+
+&gpucc {
+	status = "okay";
+};
+
+&mmcc {
+	status = "okay";
+};
+
+&mmss_smmu {
+	status = "okay";
+};
 
 &adsp_pil {
+	status = "okay";
         firmware-name = "adsp.mdt";
 };
 
-&gpucc { 
-	status = "okay";
+&adreno_gpu {
+        status = "okay";
+	firmware-name = "a512_zap.mdt";
 };
+
+/*&remoteproc_mss {
+	status = "okay";
+	firmware-name = "mba.mbn","modem.mdt";
+};*/
+
+/*&venus {
+	status = "okay";
+	firmware-name = "qcom/venus-4.2/venus.mdt";
+};*/
+
