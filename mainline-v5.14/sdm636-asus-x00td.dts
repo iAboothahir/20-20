@@ -23,7 +23,7 @@
 	};
 
 	chosen {
-		bootargs = "earlycon=tty0 console=tty0";
+		// bootargs = "earlycon=tty0 console=tty0";
 
 		#address-cells = <2>;
 		#size-cells = <2>;
@@ -463,27 +463,40 @@
 	status = "okay";
 };
 
+&blsp_i2c2 {
+	status ="okay";
+	/* smb138x charger */
+};
+
 &blsp_i2c4 {
-      #address-cells = <1>;
-      #size-cells = <0>;
-
-      touchscreen@62 {
-	compatible = "novatek,nt36525";
-        reg = <0x62>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	
+	touchscreen@62 {
+		compatible = "novatek,nt36525";
+		reg = <0x62>;
         
-	interrupt-parent = <&tlmm>;
-        interrupts = <45 IRQ_TYPE_EDGE_RISING>;
-        reset-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
+		interrupt-parent = <&tlmm>;
+		interrupts = <45 IRQ_TYPE_EDGE_RISING>;
+		reset-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
 
-        vdd-supply = <&pm660l_l3>;
-        vio-supply = <&pm660_l11>;
-	//ibb-supply = <&ibb>;
-        //lab-supply = <&lab>;
+		vdd-supply = <&pm660l_l3>;
+		vio-supply = <&pm660_l11>;
 	};
 };
 
+&blsp_i2c6 {
+	status = "okay";
 
-/*&spmi_bus {
+};
+
+&blsp_i2c7 {
+	status = "okay";
+
+};
+
+&spmi_bus {
 	pmic@3 {
 		compatible = "qcom,pmi8998", "qcom,spmi-pmic";
 		reg = <0x3 SPMI_USID>;
@@ -532,7 +545,7 @@
 		};
         };
 };
-*/
+
 
 /*labibb: qcom-lab-ibb-regulator {
                         compatible = "qcom,pmi8998", "qcom,spmi-pmic";
@@ -595,6 +608,8 @@
 
 		backlight = <&pm660l_wled>;
 
+		ibb-supply = <&ibb>;
+                lab-supply = <&lab>;
                 vddio-supply = <&pm660_l11>;
 		//reset-gpios = <&tlmm XY GPIO_ACTIVE_LOW>;
 		reset-gpios = <&tlmm 53 GPIO_ACTIVE_HIGH>;
@@ -623,7 +638,6 @@
 	vcca-supply = <&vreg_l1b_0p925>;
 };
 
-
 &dsi1_phy {
 	status="disabled";
 };
@@ -637,11 +651,7 @@
         default-brightness = <512>;
 };
 
-&blsp_i2c4 {
-	status = "okay";
-};
-
-/*&ibb {
+&ibb {
                 regulator-min-microvolt = <4000000>;
                 regulator-max-microvolt = <6000000>;
 };
@@ -649,7 +659,7 @@
 &lab {
                 regulator-min-microvolt = <4000000>;
                 regulator-max-microvolt = <6000000>;
-};*/
+};
 
 &gcc {
 	status = "okay";
