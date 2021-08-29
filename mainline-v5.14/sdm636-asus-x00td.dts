@@ -146,21 +146,21 @@
 
 		/* qseecom_region */
 		/delete-node/ qseecom-region@f6800000;
-		qseecom_mem: qseecom_region@f4400000 {
-			reg = < 0x0 0xf4400000 0x0 0x1400000>;
+		qseecom_mem: qseecom_region@fcc00000 {
+			reg = < 0x0 0xfcc00000 0x0 0x1400000>;
 			no-map;
 		};
 
 		/* display - secure_region */
-		display_secure_region: secure_region@f5800000 {
-			reg = < 0x0 0xf5800000 0x0 0x5c00000>;
+		display_secure_region: secure_region@f4400000 {
+			reg = < 0x0 0xf4400000 0x0 0x5c00000>;
 			no-map;
 		};
 
 
 		/* linux,cma */
-                linux_cma: linux_cma@fb400000 {
-                        reg = <0x0 0xfb400000 0x0 0x2C00000>;
+                linux_cma: linux_cma@fa000000 {
+                        reg = <0x0 0xfa000000 0x0 0x2C00000>;
                         no-map;
                 };
 
@@ -172,9 +172,9 @@
                 };
 
 		/delete-node/ gpu@fed00000;
-		zap_shader_region: gpu@fe800000 {
+		zap_shader_region: gpu@fa700000 {
 			compatible = "shared-dma-pool";
-			reg = < 0x0 0xfe800000 0x0 0xa00000>;
+			reg = < 0x0 0xfa700000 0x0 0x2000>;
 			no-map;
 		};
 
