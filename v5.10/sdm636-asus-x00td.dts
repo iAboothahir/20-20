@@ -409,8 +409,9 @@
 };
 
 &blsp_i2c4 {
-      #address-cells = <1>;
-      #size-cells = <0>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
 
       touchscreen@62 {
 	compatible = "novatek,nt36525";
@@ -422,7 +423,7 @@
         vdd-supply = <&pm660l_l3>;
         vio-supply = <&pm660_l11>;
 
-};
+	};
 	rmi4-i2c-dev@70 {
 		reg = <0x70>;
 		compatible = "syna,rmi4-i2c";
@@ -475,6 +476,7 @@
 &dsi0 {
 	#address-cells = <1>;
 	#size-cells = <0>;
+	status = "okay";
 	vdda-supply = <&vreg_l1a_1p225>;
 	panel@0 {
 		compatible = "mdss,nt36672-txd";
@@ -504,6 +506,21 @@
 &mdss {
 	status = "okay";
 };
+
 &dsi0_phy {
 	vcca-supply = <&vreg_l1b_0p925>;
 };
+
+&pm660l_wled {
+        status = "okay";
+        default-brightness = <512>;
+};
+
+&dsi1_phy{
+	status="disabled";
+};
+
+&dsi1{
+	status="disabled";
+};
+
