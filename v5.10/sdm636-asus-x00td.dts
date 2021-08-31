@@ -13,6 +13,14 @@
 #include "pm660.dtsi"
 #include "pm660l.dtsi"
 
+/delete-node/ &qhee_code;
+/delete-node/ &smem_region;
+/delete-node/ &tz_mem;
+/delete-node/ &mpss_region;
+/delete-node/ &mba_region;
+/delete-node/ &adsp_region;
+/delete-node/ &buffer_mem;
+
 / {
 	model = "Asus Zenfone Max Pro M1";
 	compatible = "asus,x00td", "qcom,sdm660", "qcom, sdm636";
@@ -62,29 +70,29 @@
 		#address-cells = <2>;
 		#size-cells = <2>;
 		ranges;
-		memory@85600000 {
+		wlan_msa_guard: wlan-msa-guard@85600000 {
 			reg = <0x0 0x85600000 0x0 0x100000>;
 			no-map;
 		};
 
-		memory@85700000 {
+		wlan_msa_mem: wlan-msa-mem@85700000 {
 			reg = <0x0 0x85700000 0x0 0x100000>;
 			no-map;
 		};
 
 		/* removed_regions in downstream / qhee_code */
-		memory@85800000 {
-			reg = <0x0 0x85800000 0x0 0x800000>;
+		removed_region: removed_region@85800000 {
+			reg = <0x0 0x85800000 0x0 0x600000>;
 			no-map;
 		};
 
-		smem_mem: memory@86000000 {
+		smem_region: smem_memory@86000000 {
 			reg = <0x0 0x86000000 0x0 0x200000>;
 			no-map;
 		};
 
 		/* tz_mem */
-		memory@86200000 {
+		tz_mem: tz_memory@86200000 {
 			reg = <0x0 0x86200000 0x0 0x2D00000>;
 			/* 0x86200000 + 0x2D00000 = 0x88F00000 */
 			no-map;
@@ -98,31 +106,31 @@
 		/* which covers region starting from removed_regions to 0x88F00000 (end of our tz_mem) */
 
 		/* modem_fw_region */
-		memory@8ac00000 {
+		mpss_region: modem_fw_region@8ac00000 {
 			reg = <0x0 0x8ac00000 0x0 0x7e00000>;
 			no-map;
 		};
 
 		/* adsp_fw_region */
-		memory@92a00000 {
+		adsp_region: adsp@92a00000 {
 			reg = <0x0 0x92a00000 0x0 0x1e00000>;
 			no-map;
 		};
 
 		/* pil_mba_mem */
-		memory@94800000 {
+		mba_region: mba@94800000 {
 			reg = <0x0 0x94800000 0x0 0x200000>;
 			no-map;
 		};
 
 		/* cdsp_fw_region */
-		memory@94a00000 {
+		buffer_mem: buffer_region@94a00000 {
 			reg = <0x0 0x94a00000 0x0 0x600000>;
 			no-map;
 		};
 
 		/* cont_splash_region / framebuffer */
-		memory@9d400000 {
+		cont_splash: splash_region9d400000 {
 			reg = <0x0 0x9d400000 0x0 0x2400000>;
 			no-map;
 		};
