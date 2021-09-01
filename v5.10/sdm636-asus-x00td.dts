@@ -38,13 +38,14 @@
 		stdout-path = "framebuffer0";
 
 		framebuffer0: framebuffer@0x9d400000 {
-      		compatible = "simple-framebuffer";
-      		reg = <0x0 0x9d400000 0x0 (1080 * 2160 * 4)>;
-      		width = <1080>;
-      		height = <2160>;
-      		stride = <(1080 * 4)>;
-      		format = "a8r8g8b8";
-    	};
+		compatible = "simple-framebuffer";
+		reg = <0x0 0x9d400000 0x0 (1080 * 2160 * 4)>;
+		status = "okay";
+		width = <1080>;
+		height = <2160>;
+		stride = <(1080 * 4)>;
+		format = "a8r8g8b8";
+	};
 	};
 
 	gpio_keys {
@@ -491,8 +492,9 @@
 		reg = <0>;
 
 		backlight = <&pm660l_wled>;
-		ibb-supply = <&ibb>;
-		lab-supply = <&lab>;
+		//ibb-supply = <&ibb>;
+		//lab-supply = <&lab>;
+		vddio-supply = <&pm660_l11>;
 		//reset-gpios = <&tlmm XY GPIO_ACTIVE_LOW>;
 		reset-gpios = <&tlmm 53 GPIO_ACTIVE_HIGH>;
 		disp-te-gpios = <&tlmm 59 GPIO_ACTIVE_HIGH>;
