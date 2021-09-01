@@ -534,3 +534,6 @@
 	status="disabled";
 };
 
+&msm_dp {
+	status = "disabled";
+};
