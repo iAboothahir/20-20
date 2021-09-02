@@ -382,7 +382,7 @@ CONFIG_ARM64_PA_BITS=48
 CONFIG_CPU_LITTLE_ENDIAN=y
 CONFIG_SCHED_MC=y
 # CONFIG_SCHED_SMT is not set
-CONFIG_NR_CPUS=4
+CONFIG_NR_CPUS=8
 CONFIG_HOTPLUG_CPU=y
 # CONFIG_NUMA is not set
 # CONFIG_HZ_100 is not set
@@ -483,7 +483,7 @@ CONFIG_STACKPROTECTOR_PER_TASK=y
 #
 # Boot options
 #
-CONFIG_CMDLINE="ramoops.mem_address=0xa0000000 ramoops.mem_size=0x400000 ramoops.dump_oops=1 ramoops.record_size=0x10000 debug clk_ignore_unused ignore_loglevel PMOS_MO_OUTPUT_REDIRECT"
+CONFIG_CMDLINE="rootfs_part=mmcblk0p66 rootfs_path=.stowaways/postmarketOS.img ramoops.mem_address=0xa0000000 ramoops.mem_size=0x400000 ramoops.dump_oops=1 ramoops.record_size=0x10000 debug clk_ignore_unused ignore_loglevel PMOS_NO_OUTPUT_REDIRECT"
 # CONFIG_CMDLINE_FROM_BOOTLOADER is not set
 CONFIG_CMDLINE_FORCE=y
 # CONFIG_EFI is not set
