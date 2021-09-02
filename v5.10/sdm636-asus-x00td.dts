@@ -537,3 +537,39 @@
 &msm_dp {
 	status = "disabled";
 };
+
+&gcc {
+	status = "okay";
+};
+
+&gpucc {
+	status = "okay";
+};
+
+&mmcc {
+	status = "okay";
+};
+
+&mmss_smmu {
+	status = "okay";
+};
+
+&adsp_pil {
+	status = "okay";
+        firmware-name = "adsp.mdt";
+};
+
+&adreno_gpu {
+        status = "okay";
+	firmware-name = "a512_zap.mdt";
+};
+
+&remoteproc_mss {
+	status = "okay";
+	firmware-name = "mba.mbn","modem.mdt";
+};
+
+&venus {
+	status = "okay";
+	firmware-name = "qcom/venus-4.4/venus.mdt";
+};
