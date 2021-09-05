@@ -175,7 +175,13 @@ CONFIG_CGROUP_BPF=y
 # CONFIG_CGROUP_MISC is not set
 CONFIG_CGROUP_DEBUG=y
 CONFIG_SOCK_CGROUP_DATA=y
-# CONFIG_NAMESPACES is not set
+CONFIG_NAMESPACES=y
+CONFIG_UTS_NS=y
+CONFIG_TIME_NS=y
+CONFIG_IPC_NS=y
+CONFIG_USER_NS=y
+CONFIG_PID_NS=y
+CONFIG_NET_NS=y
 # CONFIG_CHECKPOINT_RESTORE is not set
 CONFIG_SCHED_AUTOGROUP=y
 # CONFIG_SYSFS_DEPRECATED is not set
@@ -2859,7 +2865,7 @@ CONFIG_POWER_SUPPLY_HWMON=y
 # CONFIG_CHARGER_SMB347 is not set
 # CONFIG_BATTERY_GAUGE_LTC2941 is not set
 # CONFIG_BATTERY_GOLDFISH is not set
-# CONFIG_BATTERY_RT5033 is not set
+CONFIG_BATTERY_RT5033=y
 # CONFIG_CHARGER_RT9455 is not set
 # CONFIG_CHARGER_UCS1002 is not set
 # CONFIG_CHARGER_BD99954 is not set
@@ -3263,7 +3269,7 @@ CONFIG_REGULATOR_QCOM_SPMI=y
 # CONFIG_REGULATOR_QCOM_USB_VBUS is not set
 # CONFIG_REGULATOR_RASPBERRYPI_TOUCHSCREEN_ATTINY is not set
 # CONFIG_REGULATOR_RT4801 is not set
-# CONFIG_REGULATOR_RT5033 is not set
+CONFIG_REGULATOR_RT5033=y
 # CONFIG_REGULATOR_RT6160 is not set
 # CONFIG_REGULATOR_RT6245 is not set
 # CONFIG_REGULATOR_RTMV20 is not set
@@ -5122,93 +5128,7 @@ CONFIG_VIRTIO=y
 
 # CONFIG_GREYBUS is not set
 # CONFIG_COMEDI is not set
-CONFIG_STAGING=y
-# CONFIG_PRISM2_USB is not set
-# CONFIG_RTL8192U is not set
-# CONFIG_RTLLIB is not set
-# CONFIG_RTL8723BS is not set
-# CONFIG_R8712U is not set
-# CONFIG_R8188EU is not set
-# CONFIG_VT6655 is not set
-# CONFIG_VT6656 is not set
-
-#
-# IIO staging drivers
-#
-
-#
-# Accelerometers
-#
-# CONFIG_ADIS16203 is not set
-# CONFIG_ADIS16240 is not set
-# end of Accelerometers
-
-#
-# Analog to digital converters
-#
-# CONFIG_AD7816 is not set
-# CONFIG_AD7280 is not set
-# end of Analog to digital converters
-
-#
-# Analog digital bi-direction converters
-#
-# CONFIG_ADT7316 is not set
-# end of Analog digital bi-direction converters
-
-#
-# Capacitance to digital converters
-#
-# CONFIG_AD7746 is not set
-# end of Capacitance to digital converters
-
-#
-# Direct Digital Synthesis
-#
-# CONFIG_AD9832 is not set
-# CONFIG_AD9834 is not set
-# end of Direct Digital Synthesis
-
-#
-# Network Analyzer, Impedance Converters
-#
-# CONFIG_AD5933 is not set
-# end of Network Analyzer, Impedance Converters
-
-#
-# Active energy metering IC
-#
-# CONFIG_ADE7854 is not set
-# end of Active energy metering IC
-
-#
-# Resolver to digital converters
-#
-# CONFIG_AD2S1210 is not set
-# end of Resolver to digital converters
-# end of IIO staging drivers
-
-# CONFIG_FB_SM750 is not set
-# CONFIG_STAGING_MEDIA is not set
-
-#
-# Android
-#
-CONFIG_ASHMEM=y
-# end of Android
-
-# CONFIG_STAGING_BOARD is not set
-# CONFIG_LTE_GDM724X is not set
-# CONFIG_GS_FPGABOOT is not set
-# CONFIG_UNISYSSPAR is not set
-# CONFIG_FB_TFT is not set
-# CONFIG_KS7010 is not set
-# CONFIG_PI433 is not set
-# CONFIG_XIL_AXIS_FIFO is not set
-# CONFIG_FIELDBUS_DEV is not set
-# CONFIG_QLGE is not set
-# CONFIG_WFX is not set
-# CONFIG_MFD_HI6421_SPMI is not set
+# CONFIG_STAGING is not set
 # CONFIG_GOLDFISH is not set
 # CONFIG_CHROME_PLATFORMS is not set
 # CONFIG_MELLANOX_PLATFORM is not set
@@ -6068,11 +5988,7 @@ CONFIG_RAS=y
 #
 # Android
 #
-CONFIG_ANDROID=y
-CONFIG_ANDROID_BINDER_IPC=y
-# CONFIG_ANDROID_BINDERFS is not set
-CONFIG_ANDROID_BINDER_DEVICES="binder,hwbinder,vndbinder"
-# CONFIG_ANDROID_BINDER_IPC_SELFTEST is not set
+# CONFIG_ANDROID is not set
 # end of Android
 
 # CONFIG_LIBNVDIMM is not set
