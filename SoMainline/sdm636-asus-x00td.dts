@@ -519,6 +519,14 @@
 	vcca-supply = <&vreg_l1b_0p925>;
 };
 
+&dsi1_phy{
+	status="disabled";
+};
+
+&dsi1{
+	status="disabled";
+};
+
 &pm660l_wled {
         status = "okay";
         default-brightness = <512>;
