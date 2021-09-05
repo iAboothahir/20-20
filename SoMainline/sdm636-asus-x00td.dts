@@ -15,7 +15,11 @@
 
 / {
 	model = "Asus Zenfone Max Pro M1";
-	compatible = "asus,x00td", "qcom,sdm660", "qcom, sdm636";
+	compatible = "asus,x00td", "qcom,sdm660", "qcom,sdm636";
+	qcom,msm-id = <345 0>;
+	qcom,board-id = <0x1000b 0>;
+	qcom,pmic-id = <0x0001001b 0x0101011a 0x0 0x0>,
+			<0x0001001b 0x0201011a 0x0 0x0>;
 
 	aliases {
 		serial0 = &blsp1_uart2;
@@ -533,7 +537,6 @@
 
 &adreno_gpu {
 	status = "okay";
-
 };
 
 &blsp_i2c4 {
@@ -548,6 +551,18 @@
         firmware-name = "adsp.mdt";
 };
 
-&gpucc { 
-	status = "okay";
+&gcc {
+        status = "okay";
+};
+
+&gpucc {
+        status = "okay";
+};
+
+&mmcc {
+        status = "okay";
+};
+
+&mmss_smmu {
+        status = "okay";
 };
