@@ -377,10 +377,11 @@
 
 &tlmm {
 	gpio-reserved-ranges = <8 4>;
+
 	ts_reset_gpio: touch_gpio {
-	gpio-hog;
-	gpios = <66 GPIO_ACTIVE_HIGH>;
-	output-high;
+		gpio-hog;
+		gpios = <66 GPIO_ACTIVE_HIGH>;
+		output-high;
 	};
 	panel_reset_gpio: panel-reset-gpio {
 		pins = "gpio53";
@@ -400,6 +401,13 @@
 		function = "gpio";
 		drive-strength = <2>;
 		bias-pull-down;
+	};
+
+	mdp_vsync_n: mdp-vsync-n {
+                pins = "gpio59";
+                function = "mdp_vsync";
+                drive-strength = <2>;
+                bias-pull-down;
 	};
 };
 
@@ -426,8 +434,8 @@
         reg = <0x62>;
         
 	interrupt-parent = <&tlmm>;
-        interrupts = <45 IRQ_TYPE_EDGE_RISING>;
-        reset-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
+        interrupts = <67 IRQ_TYPE_EDGE_RISING>;
+        reset-gpios = <&tlmm 66 GPIO_ACTIVE_HIGH>;
 
         vdd-supply = <&pm660l_l3>;
         vio-supply = <&pm660_l11>;
@@ -497,11 +505,11 @@
                 //lab-supply = <&lab>;
                 vddio-supply = <&pm660_l11>;
                 //reset-gpios = <&tlmm XY GPIO_ACTIVE_LOW>;
-                reset-gpios = <&tlmm 53 GPIO_ACTIVE_HIGH>;
-                disp-te-gpios = <&tlmm 59 GPIO_ACTIVE_HIGH>;
+                reset-gpios = <&tlmm 53 GPIO_ACTIVE_LOW>;
+                disp-te-gpios = <&tlmm 59 GPIO_ACTIVE_LOW>;
 
                 pinctrl-names = "default";
-                pinctrl-0 = <&panel_reset_gpio &panel_te_gpio>;
+                pinctrl-0 = <&panel_reset_gpio &mdp_vsync_n>;
                 port {
                         panel_in: endpoint {
                                 remote-endpoint = <&dsi0_out>;
