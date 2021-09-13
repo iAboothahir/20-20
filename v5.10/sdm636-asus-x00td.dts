@@ -20,6 +20,7 @@
 /delete-node/ &mba_region;
 /delete-node/ &adsp_region;
 /delete-node/ &buffer_mem;
+/delete-node/ &zap_shader_region;
 
 / {
 	model = "Asus Zenfone Max Pro M1";
@@ -135,6 +136,13 @@
 			reg = <0x0 0x9d400000 0x0 0x2400000>;
 			no-map;
 		};
+
+		zap_shader_region: gpu@fa800000 {
+                        compatible = "shared-dma-pool";
+                        reg = <0x0 0xfa800000 0x0 0x2000>;
+                        no-map;
+                };
+
 		ramoops@a0000000 {
 			compatible = "ramoops";
 			reg = <0x0 0xa0000000 0x0 0x400000>;
@@ -426,8 +434,8 @@
 	compatible = "novatek,nt36525";
         reg = <0x62>;
         interrupt-parent = <&tlmm>;
-        interrupts = <45 IRQ_TYPE_EDGE_RISING>;
-        reset-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
+        interrupts = <67 IRQ_TYPE_EDGE_RISING>;
+        reset-gpios = <&tlmm 66 GPIO_ACTIVE_HIGH>;
 
         vdd-supply = <&pm660l_l3>;
         vio-supply = <&pm660_l11>;
@@ -486,7 +494,7 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	status = "okay";
-	vdda-supply = <&vreg_l1a_1p225>;
+	//vdda-supply = <&vreg_l1a_1p225>;
 	panel@0 {
 		compatible = "asus,nt36672-txd";
 		reg = <0>;
@@ -518,7 +526,7 @@
 };
 
 &dsi0_phy {
-	vcca-supply = <&vreg_l1b_0p925>;
+	//vcca-supply = <&vreg_l1b_0p925>;
 };
 
 &pm660l_wled {
@@ -561,7 +569,7 @@
 
 &adreno_gpu {
         status = "okay";
-	firmware-name = "a512_zap.mdt";
+	firmware-name = "a530v3_gpmu.fw2";
 };
 
 &remoteproc_mss {
@@ -571,5 +579,5 @@
 
 &venus {
 	status = "okay";
-	firmware-name = "qcom/venus-4.4/venus.mdt";
+	firmware-name = "venus.mdt";
 };

@@ -471,7 +471,7 @@ CONFIG_STACKPROTECTOR_PER_TASK=y
 #
 # Boot options
 #
-CONFIG_CMDLINE="ramoops.mem_address=0xa0000000 ramoops.mem_size=0x400000 ramoops.dump_oops=1 ramoops.record_size=0x10000 debug clk_ignore_unused ignore_loglevel PMOS_MO_OUTPUT_REDIRECT rootfs_part=mmcblk0p66 rootfs_path=/data/.stowaways/postmarketOS.img"
+CONFIG_CMDLINE="ramoops.mem_address=0xa0000000 ramoops.mem_size=0x400000 ramoops.dump_oops=1 ramoops.record_size=0x10000  clk_ignore_unused ignore_loglevel PMOS_NO_OUTPUT_REDIRECT rootfs_part=mmcblk0p66 rootfs_path=/data/.stowaways/postmarketOS.img"
 CONFIG_CMDLINE_FORCE=y
 # CONFIG_EFI is not set
 # end of Boot options
@@ -1371,7 +1371,8 @@ CONFIG_PREVENT_FIRMWARE_BUILD=y
 # Firmware loader
 #
 CONFIG_FW_LOADER=y
-CONFIG_EXTRA_FIRMWARE=""
+CONFIG_EXTRA_FIRMWARE="qcom/a512_zap.b00 qcom/a512_zap.b01 qcom/a512_zap.b02 qcom/a512_zap.elf qcom/a512_zap.mdt qcom/a530_gpmu.fw2 qcom/a530_pfp.fw qcom/a530_pm4.fw qcom/a530v3_gpmu.fw2 novatek_ts_fw_txd.bin novatek_ts_fw_dj.bin qcom/venus-4.4/venus.mdt qcom/venus-4.4/venus.b01 qcom/venus-4.4/venus.b02 qcom/venus-4.4/venus.b03"
+CONFIG_EXTRA_FIRMWARE_DIR="firmware"
 # CONFIG_FW_LOADER_USER_HELPER is not set
 # CONFIG_FW_LOADER_COMPRESS is not set
 CONFIG_FW_CACHE=y
@@ -5109,10 +5110,10 @@ CONFIG_QFMT_V2=y
 CONFIG_QUOTACTL=y
 CONFIG_AUTOFS4_FS=y
 CONFIG_AUTOFS_FS=y
-CONFIG_FUSE_FS=m
-CONFIG_CUSE=m
+CONFIG_FUSE_FS=y
+CONFIG_CUSE=y
 # CONFIG_VIRTIO_FS is not set
-CONFIG_OVERLAY_FS=m
+CONFIG_OVERLAY_FS=y
 # CONFIG_OVERLAY_FS_REDIRECT_DIR is not set
 CONFIG_OVERLAY_FS_REDIRECT_ALWAYS_FOLLOW=y
 # CONFIG_OVERLAY_FS_INDEX is not set
