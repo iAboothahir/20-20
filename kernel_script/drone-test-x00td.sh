@@ -151,15 +151,15 @@ clone() {
 	if [ $COMPILER = "gcc" ]
 	then
 		msg "|| Cloning GCC 9.3.0 baremetal ||"
-		git clone --depth=1 https://github.com/mvaisakh/gcc-arm64.git gcc64
-		git clone --depth=1 https://github.com/mvaisakh/gcc-arm.git gcc32
+		git clone --depth=1 https://github.com/theradcolor/aarch64-linux-gnu.git gcc64
+		git clone --depth=1 https://github.com/theradcolor/arm-linux-gnueabi.git gcc32
 		GCC64_DIR=$KERNEL_DIR/gcc64
 		GCC32_DIR=$KERNEL_DIR/gcc32
 	
 	fi
 
 	msg "|| Cloning Anykernel for X00T ||"
-	git clone --depth=1 https://github.com/Rombuilding-X00TD/AnyKernel3-master Anykernel3
+	git clone --depth=1 https://github.com/iAboothahir/AnyKernel3.git Anykernel3
 
 	if [ $BUILD_DTBO = 1 ]
 	then
@@ -175,12 +175,12 @@ exports() {
 	export ARCH=arm64
 	export SUBARCH=arm64
 
-	#if [ $COMPILER = "gcc" ]
-	#then
-		#echo 'Compiling with gcc !'
-		#KBUILD_COMPILER_STRING=$("$GCC64_DIR"/bin/aarch64-elf-gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
-		#PATH=$GCC64_DIR/bin/:$GCC32_DIR/bin/:/usr/bin:$PATH
-	#fi
+	if [ $COMPILER = "gcc" ]
+	then
+		echo 'Compiling with gcc !'
+		KBUILD_COMPILER_STRING=$("$GCC64_DIR"/bin/aarch64-elf-gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
+		PATH=$GCC64_DIR/bin/:$GCC32_DIR/bin/:/usr/bin:$PATH
+	fi
 
 	#export PATH KBUILD_COMPILER_STRING
 	export BOT_MSG_URL="https://api.telegram.org/bot$token/sendMessage"
