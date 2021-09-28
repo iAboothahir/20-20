@@ -54,6 +54,9 @@ KERNELTYPE=normal
 # your device or check source
 DEFCONFIG=x00td_defconfig
 
+#download the defconfig
+wget https://raw.githubusercontent.com/iAboothahir/20-20/master/kernel_script/x00td_defconfig
+cp -r x00td_defconfig arch/arm64/configs/x00td_defconfig
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
 
