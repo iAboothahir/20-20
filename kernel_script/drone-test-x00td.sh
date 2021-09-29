@@ -262,8 +262,8 @@ build_kernel() {
 	if [ $COMPILER = "gcc" ]
 	then
 		make -j"$PROCS" O=out \
-				CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
-			    CROSS_COMPILE=aarch64-linux-gnu-
+				CROSS_COMPILE=aarch64-linux-gnu- \
+				CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 	fi
 
 
