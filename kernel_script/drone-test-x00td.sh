@@ -261,9 +261,9 @@ build_kernel() {
 	
 	if [ $COMPILER = "gcc" ]
 	then
-		make -j"$PROCS" O=out \
-				CROSS_COMPILE=aarch64-linux-gnu- \
-				CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+            export CROSS_COMPILE=aarch64-linux-gnu-
+	    export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+            make -j"$PROCS" O=out
 	fi
 
 
@@ -303,7 +303,7 @@ gen_zip() {
 
 	## Prepare a final zip variable
 	ZIP_FINAL="$ZIPNAME"
-
+echo "gen_zip-loop"
 	if [ "$PTTG" = 1 ]
  	then
 		tg_post_build "$ZIP_FINAL" "$CHATID" "Build took : $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)"
