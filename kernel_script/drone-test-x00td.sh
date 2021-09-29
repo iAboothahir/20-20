@@ -56,7 +56,7 @@ DEFCONFIG=x00td_defconfig
 
 #download the defconfig
 wget https://raw.githubusercontent.com/iAboothahir/20-20/master/kernel_script/x00td_defconfig
-cp -r x00td_defconfig arch/arm64/configs/x00td_defconfig
+cp -vr x00td_defconfig arch/arm64/configs/x00td_defconfig
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
 
@@ -249,13 +249,13 @@ build_kernel() {
 	msg "|| Started Compilation ||"
 
 	make O=out $DEFCONFIG
-	if [ $DEF_REG = 1 ]
-	then
-		cp .config arch/arm64/configs/$DEFCONFIG
-		git add arch/arm64/configs/$DEFCONFIG
-		git commit -m "$DEFCONFIG: Regenerate
-					This is an auto-generated commit"
-	fi
+	#if [ $DEF_REG = 1 ]
+	#then
+		#cp .config arch/arm64/configs/$DEFCONFIG
+		#git add arch/arm64/configs/$DEFCONFIG
+		#git commit -m "$DEFCONFIG: Regenerate
+					#This is an auto-generated commit"
+	#fi
 
 	BUILD_START=$(date +"%s")
 	
