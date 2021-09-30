@@ -182,7 +182,7 @@ exports() {
 		PATH=$GCC64_DIR/bin/:$GCC32_DIR/bin/:/usr/bin:$PATH
 	fi
 
-	#export PATH KBUILD_COMPILER_STRING
+	export PATH KBUILD_COMPILER_STRING
 	export BOT_MSG_URL="https://api.telegram.org/bot$token/sendMessage"
 	export BOT_BUILD_URL="https://api.telegram.org/bot$token/sendDocument"
 	PROCS=$(nproc --all)
