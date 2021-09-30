@@ -261,8 +261,8 @@ build_kernel() {
 	
 	if [ $COMPILER = "gcc" ]
 	then
-            export CROSS_COMPILE=aarch64-linux-gnu-
-	    export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+            export CROSS_COMPILE=$KERNEL_DIR/gcc64/bin/aarch64-linux-gnu-
+	    export CROSS_COMPILE_ARM32=$KERNEL_DIR/gcc32/bin/arm-linux-gnueabi-
             make -j"$PROCS" O=out
 	fi
 
