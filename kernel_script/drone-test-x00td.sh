@@ -269,11 +269,12 @@ build_kernel() {
 
 	BUILD_END=$(date +"%s")
 	DIFF=$((BUILD_END - BUILD_START))
-	
-	if [ -f "$KERNEL_DIR"/out/arch/arm64/boot/Image.gz ] 
+	cd "$KERNEL_DIR"/out/arch/arm64/boot/
+        cat Image.gz dts/qcom/sdm636-sony-xperia-ganges-mermaid.dtb > Image.gz-dtb && cd -
+	if [ -f "$KERNEL_DIR"/out/arch/arm64/boot/Image.gz-dtb ] 
 	then
 		msg "|| Kernel successfully compiled ||"
-	elif ! [ -f $KERNEL_DIR/out/arch/arm64/boot/Image.gz ]
+	elif ! [ -f $KERNEL_DIR/out/arch/arm64/boot/Image.gz-dtb ]
 	then
 		echo -e "Kernel compilation failed, See buildlog to fix errors"
 		tg_post_msg "<b>Build failed to compile after $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds</b>" "$CHATID" 
@@ -293,7 +294,7 @@ build_kernel() {
 
 gen_zip() {
 	msg "|| Zipping into a flashable zip ||"
-	 cp "$KERNEL_DIR"/out/arch/arm64/boot/Image.gz Anykernel3/
+	 cp "$KERNEL_DIR"/out/arch/arm64/boot/Image.gz-dtb Anykernel3/
 	if [ $BUILD_DTBO = 1 ]
 	then
 		cp "$KERNEL_DIR"/out/arch/arm64/boot/dtbo.img Anykernel3/
