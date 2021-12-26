@@ -36,7 +36,7 @@ err() {
 KERNEL_DIR=$PWD
 
 # The name of the Kernel, to name the ZIP
-KERNEL="linux"
+KERNEL="halium"
 
 # Kernel zip name type
 TYPE="test"
@@ -45,18 +45,18 @@ TYPE="test"
 MODEL="Max Pro M1"
 
 # The codename of the device
-DEVICE="x000td"
+DEVICE="X00TD"
 
 # Kernel revision
 KERNELTYPE=normal
 
 # The defconfig which should be used. Get it from config.gz from
 # your device or check source
-DEFCONFIG=x00td_defconfig
+DEFCONFIG=asus/X00TD-perf_defconfig
 
 #download the defconfig
-wget https://raw.githubusercontent.com/iAboothahir/20-20/master/kernel_script/x00td_defconfig
-cp -vr x00td_defconfig arch/arm64/configs/x00td_defconfig
+wget https://raw.githubusercontent.com/iAboothahir/20-20/master/kernel_script/X00TD-perf_defconfig
+cp -vr x00td_defconfig arch/arm64/configs/asus/X00TD-perf_defconfig
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
 
@@ -73,11 +73,17 @@ export CI_BRANCH
 
 # Specify compiler. 
 # 'clang' or 'gcc'
-COMPILER=gcc
+COMPILER=clang
 	if [ $COMPILER = "gcc" ]
 	then
 		# install few necessary packages
 		apt-get -y install llvm lld gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu
+	fi
+
+		if [ $COMPILER = "clang" ]
+	then
+		# install few necessary packages
+		apt-get -y install llvm lld gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu cpio
 	fi
 
 # Clean source prior building. 1 is NO(default) | 0 is YES
@@ -150,9 +156,11 @@ clone() {
 	echo " "
 	if [ $COMPILER = "gcc" ]
 	then
-		msg "|| Cloning GCC 9.3.0 baremetal ||"
-		git clone --depth=1 https://github.com/theradcolor/aarch64-linux-gnu.git gcc64
-		git clone --depth=1 https://github.com/theradcolor/arm-linux-gnueabi.git gcc32
+		msg "|| Cloning GCC 4.9 baremetal ||"
+		git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b pie-gsi --depth 1 gcc64
+		git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 -b pie-gsi --depth 1 gcc32
+		git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 -b android10-gsi --depth 1 
+		CLANG_PATH="$KERNEL_DIR/linux-x86/clang-r353983c"
 		GCC64_DIR=$KERNEL_DIR/gcc64
 		GCC32_DIR=$KERNEL_DIR/gcc32
 	
@@ -182,6 +190,13 @@ exports() {
 		PATH=$GCC64_DIR/bin/:$GCC32_DIR/bin/:/usr/bin:$PATH
 	fi
 
+	if [ $COMPILER = "clang" ]
+	then
+		echo 'Compiling with clang !'
+		KBUILD_COMPILER_STRING=$("$GCC64_DIR"/bin/aarch64-linux-android-gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
+		PATH=$GCC64_DIR/bin/:$GCC32_DIR/bin/:CLANG_PATH=$KERNEL_DIR/linux-x86/clang-r353983c/bin:/usr/bin:$PATH
+	fi
+	
 	export PATH KBUILD_COMPILER_STRING
 	export BOT_MSG_URL="https://api.telegram.org/bot$token/sendMessage"
 	export BOT_BUILD_URL="https://api.telegram.org/bot$token/sendDocument"
@@ -266,11 +281,16 @@ build_kernel() {
             make -j"$PROCS" O=out
 	fi
 
+	if [ $COMPILER = "clang" ]
+	then
+            export CROSS_COMPILE=$KERNEL_DIR/gcc64/bin/aarch64-linux-android-
+	    export CROSS_COMPILE_ARM32=$KERNEL_DIR/gcc32/bin/arm-linux-androideabi-
+            make CC=clang CLANG_TRIPLE=aarch64-linux-gnu- -j"$PROCS" O=out
+	fi
+
 
 	BUILD_END=$(date +"%s")
 	DIFF=$((BUILD_END - BUILD_START))
-	cd "$KERNEL_DIR"/out/arch/arm64/boot/
-        cat Image.gz dts/qcom/sdm636-sony-xperia-ganges-mermaid.dtb > Image.gz-dtb && cd -
 	if [ -f "$KERNEL_DIR"/out/arch/arm64/boot/Image.gz-dtb ] 
 	then
 		msg "|| Kernel successfully compiled ||"
