@@ -56,7 +56,7 @@ DEFCONFIG=asus/X00TD-perf_defconfig
 
 #download the defconfig
 wget https://raw.githubusercontent.com/iAboothahir/20-20/master/kernel_script/X00TD-perf_defconfig
-cp -vr x00td_defconfig arch/arm64/configs/asus/X00TD-perf_defconfig
+cp -vr X00TD-perf_defconfig arch/arm64/configs/asus/X00TD-perf_defconfig
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
 
