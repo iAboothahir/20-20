@@ -39,30 +39,27 @@ KERNEL_DIR=$PWD
 KERNEL="halium"
 
 # Kernel zip name type
-TYPE="test"
+TYPE="stable"
 
 # The name of the device for which the kernel is built
 MODEL="Max Pro M1"
 
 # The codename of the device
-DEVICE="X00TD"
+DEVICE="X00T/X00TD"
 
 # Kernel revision
 KERNELTYPE=normal
 
 # The defconfig which should be used. Get it from config.gz from
 # your device or check source
-DEFCONFIG=asus/X00TD-perf_defconfig
+DEFCONFIG=X00TD-perf_defconfig
 
-#download the defconfig
-wget https://raw.githubusercontent.com/iAboothahir/20-20/master/kernel_script/X00TD-perf_defconfig
-cp -vr X00TD-perf_defconfig arch/arm64/configs/asus/X00TD-perf_defconfig
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
 
 # Kernel revision
 KERNELTYPE=normal
-KERNELRELEASE=test
+KERNELRELEASE=stable
 
 # List the kernel version of each device
 VERSION="GE"
@@ -72,18 +69,12 @@ CI_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 export CI_BRANCH
 
 # Specify compiler. 
-# 'clang' or 'gcc'
+# 'clang'
 COMPILER=clang
-	if [ $COMPILER = "gcc" ]
+	if [ $COMPILER = "clang" ]
 	then
 		# install few necessary packages
 		apt-get -y install llvm lld gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu
-	fi
-
-		if [ $COMPILER = "clang" ]
-	then
-		# install few necessary packages
-		apt-get -y install llvm lld gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu cpio
 	fi
 
 # Clean source prior building. 1 is NO(default) | 0 is YES
@@ -94,7 +85,7 @@ PTTG=1
 	if [ $PTTG = 1 ]
 	then
 		# Set Telegram Chat ID
-		CHATID="-1001398988224"
+		CHATID="-495751416"
 	fi
 
 # Generate a full DEFCONFIG prior building. 1 is YES | 0 is NO(default)
@@ -154,20 +145,17 @@ DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%T")
 
 clone() {
 	echo " "
-	if [ $COMPILER = "gcc" ]
+	if [ $COMPILER = "clang" ]
 	then
-		msg "|| Cloning GCC 4.9 baremetal ||"
-		git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b pie-gsi --depth 1 gcc64
-		git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 -b pie-gsi --depth 1 gcc32
-		git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 -b android10-gsi --depth 1 
-		CLANG_PATH="$KERNEL_DIR/linux-x86/clang-r353983c"
-		GCC64_DIR=$KERNEL_DIR/gcc64
-		GCC32_DIR=$KERNEL_DIR/gcc32
-	
+		msg "|| Cloning PROTON clang ||"
+		git clone --depth=1 https://github.com/kdrag0n/proton-clang clang
+
+		# Toolchain Directory defaults to clang
+		TC_DIR=$KERNEL_DIR/clang
 	fi
 
 	msg "|| Cloning Anykernel for X00T ||"
-	git clone --depth=1 https://github.com/iAboothahir/AnyKernel3.git Anykernel3
+	git clone --depth=1 https://github.com/Rombuilding-X00TD/AnyKernel3-master Anykernel3
 
 	if [ $BUILD_DTBO = 1 ]
 	then
@@ -183,20 +171,13 @@ exports() {
 	export ARCH=arm64
 	export SUBARCH=arm64
 
-	if [ $COMPILER = "gcc" ]
-	then
-		echo 'Compiling with gcc !'
-		KBUILD_COMPILER_STRING=$("$GCC64_DIR"/bin/aarch64-linux-gnu-gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
-		PATH=$GCC64_DIR/bin/:$GCC32_DIR/bin/:/usr/bin:$PATH
-	fi
-
 	if [ $COMPILER = "clang" ]
 	then
-		echo 'Compiling with clang !'
-		KBUILD_COMPILER_STRING=$("$GCC64_DIR"/bin/aarch64-linux-android-gcc --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
-		PATH=$GCC64_DIR/bin/:$GCC32_DIR/bin/:CLANG_PATH=$KERNEL_DIR/linux-x86/clang-r353983c/bin:/usr/bin:$PATH
+		echo 'Compiling with Clang !'
+		KBUILD_COMPILER_STRING=$("$TC_DIR"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
+		PATH=$TC_DIR/bin/:$PATH
 	fi
-	
+
 	export PATH KBUILD_COMPILER_STRING
 	export BOT_MSG_URL="https://api.telegram.org/bot$token/sendMessage"
 	export BOT_BUILD_URL="https://api.telegram.org/bot$token/sendDocument"
@@ -264,33 +245,31 @@ build_kernel() {
 	msg "|| Started Compilation ||"
 
 	make O=out $DEFCONFIG
-	#if [ $DEF_REG = 1 ]
-	#then
-		#cp .config arch/arm64/configs/$DEFCONFIG
-		#git add arch/arm64/configs/$DEFCONFIG
-		#git commit -m "$DEFCONFIG: Regenerate
-					#This is an auto-generated commit"
-	#fi
+	if [ $DEF_REG = 1 ]
+	then
+		cp .config arch/arm64/configs/$DEFCONFIG
+		git add arch/arm64/configs/$DEFCONFIG
+		git commit -m "$DEFCONFIG: Regenerate
+					This is an auto-generated commit"
+	fi
 
 	BUILD_START=$(date +"%s")
 	
-	if [ $COMPILER = "gcc" ]
-	then
-            export CROSS_COMPILE=$KERNEL_DIR/gcc64/bin/aarch64-linux-gnu-
-	    export CROSS_COMPILE_ARM32=$KERNEL_DIR/gcc32/bin/arm-linux-gnueabi-
-            make -j"$PROCS" O=out
-	fi
-
 	if [ $COMPILER = "clang" ]
 	then
-            export CROSS_COMPILE=$KERNEL_DIR/gcc64/bin/aarch64-linux-android-
-	    export CROSS_COMPILE_ARM32=$KERNEL_DIR/gcc32/bin/arm-linux-androideabi-
-            make CC=clang CLANG_TRIPLE=aarch64-linux-gnu- -j"$PROCS" O=out
+		make -j"$PROCS" O=out \
+				CROSS_COMPILE=aarch64-linux-gnu- \
+				CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
+				CC=clang \
+				AR=llvm-ar \
+				OBJDUMP=llvm-objdump \
+				STRIP=llvm-strip
 	fi
 
 
 	BUILD_END=$(date +"%s")
 	DIFF=$((BUILD_END - BUILD_START))
+
 	if [ -f "$KERNEL_DIR"/out/arch/arm64/boot/Image.gz-dtb ] 
 	then
 		msg "|| Kernel successfully compiled ||"
@@ -324,7 +303,7 @@ gen_zip() {
 
 	## Prepare a final zip variable
 	ZIP_FINAL="$ZIPNAME"
-echo "gen_zip-loop"
+
 	if [ "$PTTG" = 1 ]
  	then
 		tg_post_build "$ZIP_FINAL" "$CHATID" "Build took : $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)"
