@@ -54,6 +54,10 @@ KERNELTYPE=normal
 # your device or check source
 DEFCONFIG=asus/X00TD-perf_defconfig
 
+#download the defconfig
+wget https://raw.githubusercontent.com/iAboothahir/20-20/master/kernel_script/X00TD-perf_defconfig
+cp -vr X00TD-perf_defconfig arch/arm64/configs/asus/X00TD-perf_defconfig
+
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
 
@@ -147,11 +151,13 @@ clone() {
 	echo " "
 	if [ $COMPILER = "clang" ]
 	then
-		msg "|| Cloning PROTON clang ||"
-		git clone --depth=1 https://github.com/kdrag0n/proton-clang clang
-
-		# Toolchain Directory defaults to clang
-		TC_DIR=$KERNEL_DIR/clang
+		msg "|| Cloning GCC 4.9 baremetal ||"
+		git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9 -b pie-gsi --depth 1 gcc64
+		git clone https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9 -b pie-gsi --depth 1 gcc32
+		git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 -b android10-gsi --depth 1 
+		CLANG_PATH="$KERNEL_DIR/linux-x86/clang-r353983c"
+		GCC64_DIR=$KERNEL_DIR/gcc64
+		GCC32_DIR=$KERNEL_DIR/gcc32
 	fi
 
 	msg "|| Cloning Anykernel for X00T ||"
@@ -173,9 +179,10 @@ exports() {
 
 	if [ $COMPILER = "clang" ]
 	then
-		echo 'Compiling with Clang !'
-		KBUILD_COMPILER_STRING=$("$TC_DIR"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
-		PATH=$TC_DIR/bin/:$PATH
+		echo 'Compiling with clang !'
+		KBUILD_COMPILER_STRING=$("$CLANG_PATH"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
+		PATH=$GCC64_DIR/bin/:$GCC32_DIR/bin/:CLANG_PATH=$KERNEL_DIR/linux-x86/clang-r353983c/bin:/usr/bin:$PATH
+
 	fi
 
 	export PATH KBUILD_COMPILER_STRING
@@ -257,13 +264,13 @@ build_kernel() {
 	
 	if [ $COMPILER = "clang" ]
 	then
-		make -j"$PROCS" O=out \
-				CROSS_COMPILE=aarch64-linux-gnu- \
-				CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
-				CC=clang \
-				AR=llvm-ar \
-				OBJDUMP=llvm-objdump \
-				STRIP=llvm-strip
+            export CROSS_COMPILE=$KERNEL_DIR/gcc64/bin/aarch64-linux-android-
+	  export CROSS_COMPILE_ARM32=$KERNEL_DIR/gcc32/bin/arm-linux-androideabi-
+            make -j"$PROCS" O=out \
+	          CC=clang \
+	          CLANG_TRIPLE=aarch64-linux-gnu- \
+		CROSS_COMPILE=aarch64-linux-android- \
+		CROSS_COMPILE_ARM32=arm-linux-androideabi-
 	fi
 
 
