@@ -181,7 +181,7 @@ exports() {
 	then
 		echo 'Compiling with clang !'
 		KBUILD_COMPILER_STRING=$("$CLANG_PATH"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
-		PATH=$GCC64_DIR/bin/:$GCC32_DIR/bin/:$CLANG_PATH=$KERNEL_DIR/linux-x86/clang-r353983c/bin:/usr/bin:$PATH
+		PATH=$GCC64_DIR/bin/:$GCC32_DIR/bin/:$CLANG_PATH/bin:/usr/bin:$PATH
 
 	fi
 
