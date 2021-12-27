@@ -60,6 +60,9 @@ cp -vr X00TD-perf_defconfig arch/arm64/configs/asus/X00TD-perf_defconfig
 
 cat /etc/os-release
 
+wget http://launchpadlibrarian.net/347857292/cpio_2.12+dfsg-6_amd64.deb
+dpkg -i cpio_2.12+dfsg-6_amd64.deb
+
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
 
@@ -80,7 +83,7 @@ COMPILER=clang
 	if [ $COMPILER = "clang" ]
 	then
 		# install few necessary packages
-		apt-get -y install llvm lld gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu cpio clang android-tools-mkbootimg bc bison build-essential ca-certificates curl flex git kmod libssl-dev libtinfo5 python2 sudo unzip wget xz-utils
+		apt-get -y install llvm lld gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu clang android-tools-mkbootimg bc bison build-essential ca-certificates curl flex git kmod libssl-dev libtinfo5 python2 sudo unzip wget xz-utils
 	fi
 
 # Clean source prior building. 1 is NO(default) | 0 is YES
