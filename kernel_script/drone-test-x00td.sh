@@ -300,14 +300,10 @@ build_kernel() {
 		python2 "$KERNEL_DIR/scripts/ufdt/libufdt/utils/src/mkdtboimg.py" \
 			create "$KERNEL_DIR/out/arch/arm64/boot/dtbo.img" --page_size=4096 "$KERNEL_DIR/out/arch/arm64/boot/dts/qcom/sm6150-idp-overlay.dtbo"
 	fi
-echo "sec-cess"
-}
 
-##--------------------------------------------------------------##
-echo "all"
-gen_zip() {
-echo "genzip"
-	msg "|| Zipping into a flashable zip ||"
+        echo "sec-cess"
+
+        msg "|| Zipping into a flashable zip ||"
 	 cp "$KERNEL_DIR"/out/arch/arm64/boot/Image.gz-dtb Anykernel3/
 	if [ $BUILD_DTBO = 1 ]
 	then
@@ -324,6 +320,14 @@ echo "genzip"
 		tg_post_build "$ZIP_FINAL" "$CHATID" "Build took : $((DIFF / 60)) minute(s) and $((DIFF % 60)) second(s)"
 	fi
 	cd ..
+
+}
+
+##--------------------------------------------------------------##
+echo "all"
+gen_zip() {
+echo "genzip"
+	
 }
 
 setversioning
