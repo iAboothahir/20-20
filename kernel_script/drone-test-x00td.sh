@@ -78,7 +78,7 @@ COMPILER=clang
 	if [ $COMPILER = "clang" ]
 	then
 		# install few necessary packages
-		apt-get -y install llvm lld gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu cpio clang
+		apt-get -y install llvm lld gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu cpio clang android-tools-mkbootimg bc bison build-essential ca-certificates curl flex git kmod libssl-dev libtinfo5 python2 sudo unzip wget xz-utils
 	fi
 
 # Clean source prior building. 1 is NO(default) | 0 is YES
